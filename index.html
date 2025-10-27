@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0", maximum-scale=3.0, minimum-scale=1.0" />
   <title>Device Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -210,7 +210,6 @@ p {
   </style>
 </head>
 <body>
-  <h1>Device Dashboard</h1>
 
   <div class="search-container">
     <input type="text" id="searchInput" placeholder="Search by Name or IP..." onkeyup="filterTable()" />
@@ -254,7 +253,7 @@ p {
   </table>
 
   <div id="chartPage" class="chart-page">
-    <h2 id="deviceName"></h2>
+    <h2 id="deviceName" style="text-align: center;"></h2>
     <a class="back-btn" onclick="goBack()">← Back</a>
 
 
@@ -329,4 +328,5 @@ p {
   </script>
 </body>
 </html>
+
 
