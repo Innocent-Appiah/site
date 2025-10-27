@@ -79,12 +79,22 @@
     }
 
     .chart-container {
-      width: 100%;
-      max-width: 500px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+         width: 100%;
+    max-width: 500px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    /* Anti-zoom properties */
+    text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    
+    /* Ensure proper mobile behavior */
+    touch-action: manipulation;
+    box-sizing: border-box;
     }
 
     .back-btn {
@@ -108,12 +118,7 @@
      position: relative;
    }
       /* Base styles for all devices */
-body {
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 0;
-    padding: 0;
-}
+
 
 .container {
     width: 100%;
@@ -122,23 +127,22 @@ body {
     padding: 0 15px;
 }
 
-/* Tablet devices (768px and below) */
+/* Mobile-specific adjustments */
 @media (max-width: 768px) {
-    body {
-        font-size: 14px;
-    }
-    
-    .container {
-        padding: 0 10px;
+    .chart-container {
+        padding: 15px;
+        margin: 10px;
+        font-size: 16px; /* Prevent iOS zoom */
     }
 }
 
-/* Mobile devices (480px and below) */
 @media (max-width: 480px) {
-    body {
-        font-size: 12px;
+    .chart-container {
+        padding: 12px;
+        margin: 5px;
+        border-radius: 8px;
     }
-    
+}
     h1 {
         font-size: 24px;
     }
@@ -329,6 +333,7 @@ p {
   </script>
 </body>
 </html>
+
 
 
 
