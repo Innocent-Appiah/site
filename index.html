@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Device Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .search-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .search-container input {
+      padding: 10px;
+      width: 50%;
+      max-width: 400px;
+      font-size: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      margin-bottom: 30px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #2a97eaba;
+      color: white;
+    }
+
+    td a {
+      color: #060606;
+    
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    td a:hover {
+      text-decoration: underline;
+    }
+
+    .chart-page {
+      display: none;
+      text-align: center;
+    }
+
+    .chart-page.active {
+      display: block;
+    }
+
+    /* 🔹 Two charts per row always */
+    #chartsContainer {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      justify-items: center;
+      margin-top: 30px;
+    }
+
+    .chart-container {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-bottom: 20px;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .back-btn:hover {
+      background: #0056b3;
+    }
+
+    .chart-page {
+     position: relative;
+   }
+
+  </style>
+</head>
+<body>
+  <h1>Device Dashboard</h1>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search by Name or IP..." onkeyup="filterTable()" />
+  </div>
+
+  <table id="deviceTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Status</th>
+        <th>IP</th>
+        <th>Device Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="#" onclick="viewDevice('Router-01')">Router-01</a></td>
+        <td>Online</td>
+        <td>192.168.1.1</td>
+        <td>Router</td>
+      </tr>
+      <tr>
+        <td><a href="#" onclick="viewDevice('Camera-12')">Camera-12</a></td>
+        <td>Offline</td>
+        <td>192.168.1.45</td>
+        <td>Camera</td>
+      </tr>
+      <tr>
+        <td><a href="#" onclick="viewDevice('Switch-05')">Switch-05</a></td>
+        <td>Online</td>
+        <td>192.168.1.23</td>
+        <td>Switch</td>
+      </tr>
+      <tr>
+        <td><a href="#" onclick="viewDevice('Sensor-09')">Sensor-09</a></td>
+        <td>Online</td>
+        <td>192.168.1.77</td>
+        <td>Sensor</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div id="chartPage" class="chart-page">
+    <h2 id="deviceName"></h2>
+    <a class="back-btn" onclick="goBack()">← Back</a>
+
+
+        <div id="chartsContainer"></div>
+
+  </div>
+
+  <script>
+    function filterTable() {
+      const input = document.getElementById("searchInput");
+      const filter = input.value.toLowerCase();
+      const rows = document.querySelectorAll("#deviceTable tbody tr");
+
+      rows.forEach(row => {
+        const name = row.cells[0].innerText.toLowerCase();
+        const ip = row.cells[2].innerText.toLowerCase();
+        row.style.display = (name.includes(filter) || ip.includes(filter)) ? "" : "none";
+      });
+    }
+
+    function viewDevice(deviceName) {
+      document.querySelector("table").style.display = "none";
+      document.getElementById("searchInput").style.display = "none";
+      const chartPage = document.getElementById("chartPage");
+      chartPage.classList.add("active");
+      document.getElementById("deviceName").innerText = `Device: ${deviceName}`;
+
+      const container = document.getElementById("chartsContainer");
+      container.innerHTML = "";
+
+      // Example: 4 numeric metrics
+      const metrics = [
+        { name: "CPU Usage (%)", data: Array.from({ length: 10 }, () => Math.random() * 100) },
+        { name: "Memory Usage (%)", data: Array.from({ length: 10 }, () => Math.random() * 100) },
+        { name: "Temperature (°C)", data: Array.from({ length: 10 }, () => 40 + Math.random() * 20) },
+        { name: "Network Traffic (Mbps)", data: Array.from({ length: 10 }, () => Math.random() * 200) }
+      ];
+
+      metrics.forEach((metric, i) => {
+        const div = document.createElement("div");
+        div.className = "chart-container";
+        div.innerHTML = `<h3>${metric.name}</h3><canvas id="chart${i}"></canvas>`;
+        container.appendChild(div);
+
+        new Chart(document.getElementById(`chart${i}`), {
+          type: "line",
+          data: {
+            labels: Array.from({ length: 10 }, (_, j) => `T${j+1}`),
+            datasets: [{
+              label: metric.name,
+              data: metric.data,
+              borderColor: "#007bff",
+              backgroundColor: "rgba(0,123,255,0.1)",
+              tension: 0.3,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+      });
+    }
+
+    function goBack() {
+      document.querySelector("table").style.display = "";
+      document.getElementById("searchInput").style.display = "";
+      document.getElementById("chartPage").classList.remove("active");
+    }
+  </script>
+</body>
+</html>
